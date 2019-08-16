@@ -6,6 +6,6 @@ h1, h2, h5 {
     text-align: center;
 }
 
-.input, #data_input, #submit {
+.input, .display, input {
     text-align: center;
  }
