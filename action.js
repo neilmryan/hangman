@@ -1,31 +1,86 @@
+let instruction = document.querySelector('h5');
 let display = document.getElementById('board');
-let word_input = document.getElementById('word_input');
-let word_submit = document.getElementById('word_submit');
+let input = document.querySelector('.input');
+let status = document.getElementById('status');
 
+//resets the game flow on browser refresh
+window.onload = function() {
+    instruction.innerHTML = "Grant how many guesses?";
+    input.append(guessnum_input);
+    input.append(guessnum_submit);
+};
+
+//input to capture the number of guesses to allow
+let guessnum_input = document.createElement('input');
+    guessnum_input.setAttribute('id', 'guessnum_input');
+let guessnum_submit = document.createElement('button');
+    guessnum_submit.setAttribute('id', 'guessnum_submit');
+    guessnum_submit.innerHTML = "Submit";
+
+//input to capture the letter to be guessed
 let letter_input = document.createElement('input');
     letter_input.setAttribute('id', 'letter_input');
 let letter_submit = document.createElement('button');
     letter_submit.setAttribute('id', 'letter_submit');
     letter_submit.innerHTML = "Submit";
 
-let instruction = document.querySelector('h5');
-let input = document.querySelector('.input');
+//input to capture the word to be guessed
+let word_input = document.createElement('input');
+    word_input.setAttribute('id', 'word_input');
+let word_submit = document.createElement('button');
+    word_submit.setAttribute('id', 'word_submit');
+    word_submit.innerHTML = "Submit";
 
+    //Global variables
 let word_array = [];
-let guess_array = []
+let guess_array = [];
 let board = [];
-let guess_count = 0;
+let guess_num = "";
+let game_over = false;
 
+if (game_over !== false) {
+  instruction.innerHTML = "Game over!";
+}
+
+//Event listener to capture guess allowance
+guessnum_submit.addEventListener('click', function() {
+    guess_num = Number((guessnum_input.value));
+    status.innerHTML = "You have " + guess_num + " guesses!";
+    guessnum_input.style.display = "none";
+    guessnum_submit.style.display = "none";
+    instruction.innerHTML = "What is the word to guess?";
+    input.append(word_input);
+    input.append(word_submit);
+})
+
+//Event listener to collect word to guess
 word_submit.addEventListener('click', function() {
     word_array = (word_input.value).split('');
     console.log(word_array);
     makeBoardArray(word_array);
 });
 
-letter_submit.addEventListener('click', function() {
+//Event listener to capture letter to guess
+ letter_submit.addEventListener('click', function() {
   let letter = (letter_input.value);
   console.log(letter);
   checkGuess(letter, word_array);
+  guess_num--;
+  status.innerHTML = "You have " + guess_num + " guesses!";
+ 
+  if ((word_array.toString()) === (guess_array.toString())) {
+    status.innerHTML = "Congratulations you got it!";
+  } else {
+
+    if (guess_num === 0) {
+      game_over = true;
+      letter_input.disabled = true;
+      letter_submit.disabled = true;
+      status.innerHTML = "No more guesses! Game Over!";
+      displayBoard(word_array);
+      instruction.innerHTML = "Refresh browser to play again!"
+    }
+  }
 });
 
 function makeBoardArray(array) {
@@ -49,14 +104,10 @@ function displayBoard(array) {
 };
 
 function checkGuess(letter, word_array) {
-  for (let i = 0; i < word_array.length; i++) {
-    if (letter === word_array[i]) {
-      guess_array[i] = letter;
+    for (let i = 0; i < word_array.length; i++) {
+      if (letter === word_array[i]) {
+        guess_array[i] = letter;
+      }
     }
-  }
   displayBoard(guess_array);
 }
-
-//document.onload = function () {
-//  instruction.innerHTML = "Enter your word to guess!";
-//}

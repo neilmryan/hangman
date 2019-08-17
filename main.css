@@ -2,6 +2,9 @@
     border: 1px solid red !important;
  }
 
+ /* rgb colors r:31, g:172, b:234 */
+ /* rgb colors r:10, g:145, b:220 */
+
 h1, h2, h5 {
     text-align: center;
 }
@@ -9,3 +12,8 @@ h1, h2, h5 {
 .input, .display, input {
     text-align: center;
  }
+
+ h1 {
+    color:rgb(10,145,220);
+ }
+
