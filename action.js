@@ -64,7 +64,7 @@ $(guessnum_input).keypress(function(e) {
     status.innerHTML = "Guesses: " + guess_num;
     guessnum_input.style.display = "none";
     guessnum_submit.style.display = "none";
-    instruction.innerHTML = "Word?";
+    instruction.innerHTML = "Word to guess?";
     input.append(word_input);
     input.append(word_submit);
     $('#word_input').focus();
@@ -153,7 +153,7 @@ function makeBoardArray(array) {
   guess_array.fill("_");
   console.log(board);
   displayBoard(board);
-  instruction.innerHTML = "Letter?";
+  instruction.innerHTML = "Letter to guess?";
   word_input.style.display = "none";
   word_submit.style.display = "none";
   input.append(letter_input);
@@ -188,6 +188,3 @@ function checkGuess(letter, word_array) {
   displayWrongLetters(letters_array);
   displayBoard(guess_array);
 }
-
-//sets the cursor blinking in the inout field
-$('.guessField').focus();
