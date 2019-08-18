@@ -12,6 +12,7 @@ window.onload = function() {
   instruction.innerHTML = "Guesses?";
   input.append(guessnum_input);
   input.append(guessnum_submit);
+  $('#guessnum_input').focus();
 };
 
 //input to capture the number of guesses to allow
@@ -52,7 +53,23 @@ guessnum_submit.addEventListener('click', function() {
   instruction.innerHTML = "Word?";
   input.append(word_input);
   input.append(word_submit);
-})
+  $('#word_input').focus();
+});
+
+//Event listener copy for Enter key
+$(guessnum_input).keypress(function(e) {
+  let key = e.code;
+  if (key === "Enter") {
+    guess_num = Number((guessnum_input.value));
+    status.innerHTML = "Guesses: " + guess_num;
+    guessnum_input.style.display = "none";
+    guessnum_submit.style.display = "none";
+    instruction.innerHTML = "Word?";
+    input.append(word_input);
+    input.append(word_submit);
+    $('#word_input').focus();
+  }
+});
 
 //Event listener to collect word to guess
 word_submit.addEventListener('click', function() {
@@ -61,12 +78,21 @@ word_submit.addEventListener('click', function() {
   makeBoardArray(word_array);
 });
 
+//Event listener copy for Enter key
+$(word_input).keypress(function(e) {
+  let key = e.code;
+  if (key === "Enter") {
+    word_array = (word_input.value).split('');
+    console.log(word_array);
+    makeBoardArray(word_array);
+  }
+});
+
 //Event listener to capture letter to guess
 letter_submit.addEventListener('click', function() {
   let letter = (letter_input.value);
   console.log(letter);
   checkGuess(letter, word_array);
-  //guess_num--;
   status.innerHTML = "Guesses: " + guess_num;
   if ((word_array.toString()) === (guess_array.toString())) {
     status.innerHTML = "Congrats, you got it!";
@@ -90,6 +116,36 @@ letter_submit.addEventListener('click', function() {
   }
 });
 
+$(letter_input).keypress(function(e) {
+  let key = e.code;
+  if (key === "Enter") {
+    let letter = (letter_input.value);
+    console.log(letter);
+    checkGuess(letter, word_array);
+    status.innerHTML = "Guesses: " + guess_num;
+    if ((word_array.toString()) === (guess_array.toString())) {
+      status.innerHTML = "Congrats, you got it!";
+      announce.innerHTML = "Refresh browser!"
+      instruction.style.display = "none";
+      letter_input.style.display = "none";
+      letter_submit.style.display = "none";
+      letters.style.display = "none";
+      display.setAttribute('id', 'won');
+      cartoon.setAttribute('src', 'images/1.png');
+    } else {
+      if (guess_num === 0) {
+        game_over = true;
+        letter_input.style.display = "none";
+        letter_submit.style.display = "none";
+        status.innerHTML = "Game Over!";
+        cartoon.setAttribute('src', 'images/3.png');
+        displayBoard(word_array);
+        announce.innerHTML = "Refresh browser!"
+      }
+    }
+  }
+});
+
 function makeBoardArray(array) {
   board = new Array(array.length);
   board.fill("_");
@@ -102,6 +158,7 @@ function makeBoardArray(array) {
   word_submit.style.display = "none";
   input.append(letter_input);
   input.append(letter_submit);
+  $('#letter_input').focus();
 }
 
 function displayBoard(array) {
@@ -112,7 +169,7 @@ function displayBoard(array) {
 
 function displayWrongLetters(array) {
     letters.style.display = "block";
-    letters.innerHTML = "Missed Letters: " + array.join(" ") + "";
+    letters.innerHTML = "Missed Letters: " + array.join(" ").toUpperCase() + "";
 }
 
 function checkGuess(letter, word_array) {
@@ -131,3 +188,6 @@ function checkGuess(letter, word_array) {
   displayWrongLetters(letters_array);
   displayBoard(guess_array);
 }
+
+//sets the cursor blinking in the inout field
+$('.guessField').focus();
