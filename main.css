@@ -28,7 +28,7 @@ h1, h2, h3, h5, input, button {
     color:rgb(82,169,228);
  }
 
- h1 {
+ h1, #won {
     color:rgb(82,169,228);
     border: 4px solid rgb(82,169,228);
     border-radius: 10px;

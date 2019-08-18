@@ -8,6 +8,7 @@ let letters = document.getElementById('letters');
 
 //resets the game flow on browser refresh
 window.onload = function() {
+  letters.style.display = "none";
   instruction.innerHTML = "Guesses?";
   input.append(guessnum_input);
   input.append(guessnum_submit);
@@ -48,7 +49,7 @@ guessnum_submit.addEventListener('click', function() {
   status.innerHTML = "Guesses: " + guess_num;
   guessnum_input.style.display = "none";
   guessnum_submit.style.display = "none";
-  instruction.innerHTML = "Word to guess?";
+  instruction.innerHTML = "Word?";
   input.append(word_input);
   input.append(word_submit);
 })
@@ -70,12 +71,17 @@ letter_submit.addEventListener('click', function() {
   if ((word_array.toString()) === (guess_array.toString())) {
     status.innerHTML = "Congrats, you got it!";
     announce.innerHTML = "Refresh browser!"
+    instruction.style.display = "none";
+    letter_input.style.display = "none";
+    letter_submit.style.display = "none";
+    letters.style.display = "none";
+    display.setAttribute('id', 'won');
     cartoon.setAttribute('src', 'images/1.png');
   } else {
     if (guess_num === 0) {
       game_over = true;
-      letter_input.disabled = true;
-      letter_submit.disabled = true;
+      letter_input.style.display = "none";
+      letter_submit.style.display = "none";
       status.innerHTML = "Game Over!";
       cartoon.setAttribute('src', 'images/3.png');
       displayBoard(word_array);
@@ -91,7 +97,7 @@ function makeBoardArray(array) {
   guess_array.fill("_");
   console.log(board);
   displayBoard(board);
-  instruction.innerHTML = "Letter to guess?";
+  instruction.innerHTML = "Letter?";
   word_input.style.display = "none";
   word_submit.style.display = "none";
   input.append(letter_input);
@@ -99,10 +105,15 @@ function makeBoardArray(array) {
 }
 
 function displayBoard(array) {
-  display.innerHTML = "" + array.join(" ") + "";
+  display.innerHTML = "" + array.join(" ").toUpperCase() + "";
   word_input.value = "";
   letter_input.value = "";
 };
+
+function displayWrongLetters(array) {
+    letters.style.display = "block";
+    letters.innerHTML = "Missed Letters: " + array.join(" ") + "";
+}
 
 function checkGuess(letter, word_array) {
   if (word_array.includes(letter)) {
@@ -117,6 +128,6 @@ function checkGuess(letter, word_array) {
         guess_num--;
       }
   }
-  letters.append(letters_array);
+  displayWrongLetters(letters_array);
   displayBoard(guess_array);
 }
