@@ -73,7 +73,7 @@ $(guessnum_input).keypress(function(e) {
 
 //Event listener to collect word to guess
 word_submit.addEventListener('click', function() {
-  word_array = (word_input.value).split('');
+  word_array = (word_input.value).toLowerCase().split('');
   console.log(word_array);
   makeBoardArray(word_array);
 });
@@ -82,7 +82,7 @@ word_submit.addEventListener('click', function() {
 $(word_input).keypress(function(e) {
   let key = e.code;
   if (key === "Enter") {
-    word_array = (word_input.value).split('');
+    word_array = (word_input.value).toLowerCase().split('');
     console.log(word_array);
     makeBoardArray(word_array);
   }
@@ -91,6 +91,7 @@ $(word_input).keypress(function(e) {
 //Event listener to capture letter to guess
 letter_submit.addEventListener('click', function() {
   let letter = (letter_input.value);
+  letter = letter.toLowerCase();
   console.log(letter);
   checkGuess(letter, word_array);
   status.innerHTML = "Guesses: " + guess_num;
@@ -120,6 +121,7 @@ $(letter_input).keypress(function(e) {
   let key = e.code;
   if (key === "Enter") {
     let letter = (letter_input.value);
+    letter = letter.toLowerCase();
     console.log(letter);
     checkGuess(letter, word_array);
     status.innerHTML = "Guesses: " + guess_num;
