@@ -2,11 +2,13 @@ let instruction = document.querySelector('h5');
 let display = document.getElementById('board');
 let input = document.querySelector('.input');
 let status = document.getElementById('status');
+let announce = document.getElementById('announce');
 let cartoon = document.getElementById('img');
+let letters = document.getElementById('letters');
 
 //resets the game flow on browser refresh
 window.onload = function() {
-  instruction.innerHTML = "Grant how many guesses?";
+  instruction.innerHTML = "Guesses?";
   input.append(guessnum_input);
   input.append(guessnum_submit);
 };
@@ -36,13 +38,14 @@ word_submit.innerHTML = "Submit";
 let word_array = [];
 let guess_array = [];
 let board = [];
+let letters_array = [];
 let guess_num = "";
 let game_over = false;
 
 //Event listener to capture guess allowance
 guessnum_submit.addEventListener('click', function() {
   guess_num = Number((guessnum_input.value));
-  status.innerHTML = "Guesses Remaining: " + guess_num;
+  status.innerHTML = "Guesses: " + guess_num;
   guessnum_input.style.display = "none";
   guessnum_submit.style.display = "none";
   instruction.innerHTML = "Word to guess?";
@@ -62,10 +65,11 @@ letter_submit.addEventListener('click', function() {
   let letter = (letter_input.value);
   console.log(letter);
   checkGuess(letter, word_array);
-  guess_num--;
-  status.innerHTML = "Guesses remaining: " + guess_num;
+  //guess_num--;
+  status.innerHTML = "Guesses: " + guess_num;
   if ((word_array.toString()) === (guess_array.toString())) {
     status.innerHTML = "Congrats, you got it!";
+    announce.innerHTML = "Refresh browser!"
     cartoon.setAttribute('src', 'images/1.png');
   } else {
     if (guess_num === 0) {
@@ -75,7 +79,7 @@ letter_submit.addEventListener('click', function() {
       status.innerHTML = "Game Over!";
       cartoon.setAttribute('src', 'images/3.png');
       displayBoard(word_array);
-      instruction.innerHTML = "Refresh browser to play again!"
+      announce.innerHTML = "Refresh browser!"
     }
   }
 });
@@ -101,10 +105,18 @@ function displayBoard(array) {
 };
 
 function checkGuess(letter, word_array) {
-  for (let i = 0; i < word_array.length; i++) {
-    if (letter === word_array[i]) {
-      guess_array[i] = letter;
+  if (word_array.includes(letter)) {
+    for (let i = 0; i < word_array.length; i++) {
+      if (letter === word_array[i]) {
+        guess_array[i] = letter;
+      }
     }
+  } else {
+      if (!letters_array.includes(letter)) {
+        letters_array.push(letter)
+        guess_num--;
+      }
   }
+  letters.append(letters_array);
   displayBoard(guess_array);
 }
