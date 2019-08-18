@@ -9,7 +9,7 @@ let letters = document.getElementById('letters');
 //resets the game flow on browser refresh
 window.onload = function() {
   letters.style.display = "none";
-  instruction.innerHTML = "Guesses?";
+  instruction.innerHTML = "Number of guesses allowed?";
   input.append(guessnum_input);
   input.append(guessnum_submit);
   $('#guessnum_input').focus();
@@ -50,7 +50,7 @@ guessnum_submit.addEventListener('click', function() {
   status.innerHTML = "Guesses: " + guess_num;
   guessnum_input.style.display = "none";
   guessnum_submit.style.display = "none";
-  instruction.innerHTML = "Word?";
+  instruction.innerHTML = "Word to guess?";
   input.append(word_input);
   input.append(word_submit);
   $('#word_input').focus();
