@@ -9,7 +9,7 @@ let letters = document.getElementById('letters');
 //resets the game flow on browser refresh
 window.onload = function() {
   letters.style.display = "none";
-  instruction.innerHTML = "Number of guesses allowed?";
+  instruction.innerHTML = "Number of attempts? (1-10)";
   input.append(guessnum_input);
   input.append(guessnum_submit);
   $('#guessnum_input').focus();
@@ -43,31 +43,40 @@ let board = [];
 let letters_array = [];
 let guess_num = "";
 let game_over = false;
+let guess_num_options = ['1','2','3','4','5','6','7','8','9','10'];
 
 //Event listener to capture guess allowance
 guessnum_submit.addEventListener('click', function() {
-  guess_num = Number((guessnum_input.value));
-  status.innerHTML = "Guesses: " + guess_num;
-  guessnum_input.style.display = "none";
-  guessnum_submit.style.display = "none";
-  instruction.innerHTML = "Word to guess?";
-  input.append(word_input);
-  input.append(word_submit);
-  $('#word_input').focus();
+  if (!guess_num_options.includes(guessnum_input.value)) {
+    status.innerHTML = "That's not a number!";
+  } else {
+    guess_num = Number((guessnum_input.value));
+    status.innerHTML = "Guesses: " + guess_num;
+    guessnum_input.style.display = "none";
+    guessnum_submit.style.display = "none";
+    instruction.innerHTML = "Secret word to guess?";
+    input.append(word_input);
+    input.append(word_submit);
+    $('#word_input').focus();
+  }
 });
 
 //Event listener copy for Enter key
 $(guessnum_input).keypress(function(e) {
   let key = e.code;
   if (key === "Enter") {
-    guess_num = Number((guessnum_input.value));
-    status.innerHTML = "Guesses: " + guess_num;
-    guessnum_input.style.display = "none";
-    guessnum_submit.style.display = "none";
-    instruction.innerHTML = "Word to guess?";
-    input.append(word_input);
-    input.append(word_submit);
-    $('#word_input').focus();
+    if (!guess_num_options.includes(guessnum_input.value)) {
+      status.innerHTML = "That's not a number!";
+    } else {
+      guess_num = Number((guessnum_input.value));
+      status.innerHTML = "Guesses: " + guess_num;
+      guessnum_input.style.display = "none";
+      guessnum_submit.style.display = "none";
+      instruction.innerHTML = "Secret word to guess?";
+      input.append(word_input);
+      input.append(word_submit);
+      $('#word_input').focus();
+    }
   }
 });
 
@@ -140,6 +149,7 @@ $(letter_input).keypress(function(e) {
         letter_input.style.display = "none";
         letter_submit.style.display = "none";
         status.innerHTML = "Game Over!";
+        instruction.style.display = "none";
         cartoon.setAttribute('src', 'images/3.png');
         displayBoard(word_array);
         announce.innerHTML = "Refresh browser!"
@@ -189,4 +199,5 @@ function checkGuess(letter, word_array) {
   }
   displayWrongLetters(letters_array);
   displayBoard(guess_array);
+  $('#letter_input').focus();
 }
