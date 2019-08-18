@@ -153,7 +153,7 @@ function makeBoardArray(array) {
   guess_array.fill("_");
   console.log(board);
   displayBoard(board);
-  instruction.innerHTML = "Letter to guess?";
+  instruction.innerHTML = "Enter the letter to guess?";
   word_input.style.display = "none";
   word_submit.style.display = "none";
   input.append(letter_input);
