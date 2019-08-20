@@ -1,3 +1,4 @@
+//DOM access variables
 let instruction = document.querySelector('h5');
 let display = document.getElementById('board');
 let input = document.querySelector('.input');
@@ -6,10 +7,17 @@ let announce = document.getElementById('announce');
 let cartoon = document.getElementById('img');
 let letters = document.getElementById('letters');
 
+//Global variables
+let word_array = [];
+let guess_array = [];
+let board = [];
+let letters_array = [];
+let guess_num = "";
+
 //resets the game flow on browser refresh
 window.onload = function() {
   letters.style.display = "none";
-  instruction.innerHTML = "Number of attempts? (1-10)";
+  instruction.innerHTML = "Number of guess attempts? (1-10)";
   input.append(guessnum_input);
   input.append(guessnum_submit);
   $('#guessnum_input').focus();
@@ -36,19 +44,12 @@ let word_submit = document.createElement('button');
 word_submit.setAttribute('id', 'word_submit');
 word_submit.innerHTML = "Submit";
 
-//Global variables
-let word_array = [];
-let guess_array = [];
-let board = [];
-let letters_array = [];
-let guess_num = "";
-let game_over = false;
-let guess_num_options = ['1','2','3','4','5','6','7','8','9','10'];
-
-//Event listener to capture guess allowance
+//Click event listener to capture guess allowance
 guessnum_submit.addEventListener('click', function() {
-  if (!guess_num_options.includes(guessnum_input.value)) {
-    status.innerHTML = "That's not a number!";
+  if(!checkGuessNumInputValid(guessnum_input.value)) {
+    status.innerHTML = "Please enter a number(1-10)!";
+    guessnum_input.value = "";
+    $('#guessnum_input').focus();
   } else {
     guess_num = Number((guessnum_input.value));
     status.innerHTML = "Guesses: " + guess_num;
@@ -61,12 +62,15 @@ guessnum_submit.addEventListener('click', function() {
   }
 });
 
-//Event listener copy for Enter key
+
+//Kepress event listener to capture guess allowance
 $(guessnum_input).keypress(function(e) {
   let key = e.code;
   if (key === "Enter") {
-    if (!guess_num_options.includes(guessnum_input.value)) {
-      status.innerHTML = "That's not a number!";
+    if(!checkGuessNumInputValid(guessnum_input.value)) {
+      status.innerHTML = "Please enter a number(1-10)!";
+      guessnum_input.value = "";
+      $('#guessnum_input').focus();
     } else {
       guess_num = Number((guessnum_input.value));
       status.innerHTML = "Guesses: " + guess_num;
@@ -80,58 +84,29 @@ $(guessnum_input).keypress(function(e) {
   }
 });
 
-//Event listener to collect word to guess
+//Click event listener to collect word to guess
 word_submit.addEventListener('click', function() {
   word_array = (word_input.value).toLowerCase().split('');
-  console.log(word_array);
   makeBoardArray(word_array);
 });
 
-//Event listener copy for Enter key
+//Keypress event listener to collect word to guess
 $(word_input).keypress(function(e) {
   let key = e.code;
   if (key === "Enter") {
     word_array = (word_input.value).toLowerCase().split('');
-    console.log(word_array);
     makeBoardArray(word_array);
   }
 });
 
-//Event listener to capture letter to guess
+//Click event listener to capture letter to guess
 letter_submit.addEventListener('click', function() {
-  let letter = (letter_input.value);
-  letter = letter.toLowerCase();
-  console.log(letter);
-  checkGuess(letter, word_array);
-  status.innerHTML = "Guesses: " + guess_num;
-  if ((word_array.toString()) === (guess_array.toString())) {
-    status.innerHTML = "Congrats, you got it!";
-    announce.innerHTML = "Refresh browser!"
-    instruction.style.display = "none";
-    letter_input.style.display = "none";
-    letter_submit.style.display = "none";
-    letters.style.display = "none";
-    display.setAttribute('id', 'won');
-    cartoon.setAttribute('src', 'images/1.png');
+  let letter = (letter_input.value.toLowerCase());
+  if (!checkLetterInputValid(letter)) {
+    status.innerHTML = "Please enter only a single letter to guess!";
+    letter_input.value = "";
+    $('#letter_input').focus();
   } else {
-    if (guess_num === 0) {
-      game_over = true;
-      letter_input.style.display = "none";
-      letter_submit.style.display = "none";
-      status.innerHTML = "Game Over!";
-      cartoon.setAttribute('src', 'images/3.png');
-      displayBoard(word_array);
-      announce.innerHTML = "Refresh browser!"
-    }
-  }
-});
-
-$(letter_input).keypress(function(e) {
-  let key = e.code;
-  if (key === "Enter") {
-    let letter = (letter_input.value);
-    letter = letter.toLowerCase();
-    console.log(letter);
     checkGuess(letter, word_array);
     status.innerHTML = "Guesses: " + guess_num;
     if ((word_array.toString()) === (guess_array.toString())) {
@@ -145,14 +120,49 @@ $(letter_input).keypress(function(e) {
       cartoon.setAttribute('src', 'images/1.png');
     } else {
       if (guess_num === 0) {
-        game_over = true;
         letter_input.style.display = "none";
         letter_submit.style.display = "none";
-        status.innerHTML = "Game Over!";
         instruction.style.display = "none";
+        status.innerHTML = "Game Over!";
         cartoon.setAttribute('src', 'images/3.png');
         displayBoard(word_array);
         announce.innerHTML = "Refresh browser!"
+      }
+    }
+  }
+});
+
+//Keypress event listener to capture letter to guess
+$(letter_input).keypress(function(e) {
+  let key = e.code;
+  if (key === "Enter") {
+    let letter = (letter_input.value.toLowerCase());
+    if (!checkLetterInputValid(letter)) {
+      status.innerHTML = "Please enter only a single letter to guess!";
+      letter_input.value = "";
+      $('#letter_input').focus();
+    } else {
+      checkGuess(letter, word_array);
+      status.innerHTML = "Guesses: " + guess_num;
+      if ((word_array.toString()) === (guess_array.toString())) {
+        status.innerHTML = "Congrats, you got it!";
+        announce.innerHTML = "Refresh browser!"
+        instruction.style.display = "none";
+        letter_input.style.display = "none";
+        letter_submit.style.display = "none";
+        letters.style.display = "none";
+        display.setAttribute('id', 'won');
+        cartoon.setAttribute('src', 'images/1.png');
+      } else {
+        if (guess_num === 0) {
+          letter_input.style.display = "none";
+          letter_submit.style.display = "none";
+          instruction.style.display = "none";
+          status.innerHTML = "Game Over!";
+          cartoon.setAttribute('src', 'images/3.png');
+          displayBoard(word_array);
+          announce.innerHTML = "Refresh browser!"
+        }
       }
     }
   }
@@ -200,4 +210,23 @@ function checkGuess(letter, word_array) {
   displayWrongLetters(letters_array);
   displayBoard(guess_array);
   $('#letter_input').focus();
+}
+// checks if number of attemps input is valid
+function checkGuessNumInputValid(num_str) {
+  let num = Number(num_str);
+  console.log(num);
+  if ((isNaN(num)) || (num <= 0) || (num > 10)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// checks if letter to guess input is not a number and length is 1 valid
+function checkLetterInputValid(str) {
+  if ( (isNaN(Number(str))) && (str.length === 1) ){
+    return true;
+  } else {
+    return false;
+  }
 }
