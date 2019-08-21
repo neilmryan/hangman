@@ -225,7 +225,6 @@ function checkGuess(letter, word_array) {
 // checks if number of attemps input is valid
 function checkGuessNumInputValid(num_str) {
   let num = Number(num_str);
-  console.log(num);
   if ((isNaN(num)) || (num <= 0) || (num > 10)) {
     return false;
   } else {
