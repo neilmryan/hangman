@@ -44,6 +44,16 @@ let word_submit = document.createElement('button');
 word_submit.setAttribute('id', 'word_submit');
 word_submit.innerHTML = "Submit";
 
+let game_reset_button = document.createElement('button');
+game_reset_button.setAttribute('id', 'reset_button');
+game_reset_button.innerHTML = "Click me to play again!!!";
+
+//resets the game
+game_reset_button.addEventListener('click', function(e) {
+  console.log(e.target);
+  location.reload();
+})
+
 //Click event listener to capture guess allowance
 guessnum_submit.addEventListener('click', function() {
   if(!checkGuessNumInputValid(guessnum_input.value)) {
@@ -111,7 +121,7 @@ letter_submit.addEventListener('click', function() {
     status.innerHTML = "Guesses: " + guess_num;
     if ((word_array.toString()) === (guess_array.toString())) {
       status.innerHTML = "Congrats, you got it!";
-      announce.innerHTML = "Refresh browser!"
+      announce.append(game_reset_button);
       instruction.style.display = "none";
       letter_input.style.display = "none";
       letter_submit.style.display = "none";
@@ -126,7 +136,8 @@ letter_submit.addEventListener('click', function() {
         status.innerHTML = "Game Over!";
         cartoon.setAttribute('src', 'images/3.png');
         displayBoard(word_array);
-        announce.innerHTML = "Refresh browser!"
+        instruction.style.display = "none";
+        announce.append(game_reset_button);
       }
     }
   }
@@ -146,8 +157,8 @@ $(letter_input).keypress(function(e) {
       status.innerHTML = "Guesses: " + guess_num;
       if ((word_array.toString()) === (guess_array.toString())) {
         status.innerHTML = "Congrats, you got it!";
-        announce.innerHTML = "Refresh browser!"
         instruction.style.display = "none";
+        announce.append(game_reset_button);
         letter_input.style.display = "none";
         letter_submit.style.display = "none";
         letters.style.display = "none";
@@ -157,11 +168,11 @@ $(letter_input).keypress(function(e) {
         if (guess_num === 0) {
           letter_input.style.display = "none";
           letter_submit.style.display = "none";
-          instruction.style.display = "none";
           status.innerHTML = "Game Over!";
           cartoon.setAttribute('src', 'images/3.png');
           displayBoard(word_array);
-          announce.innerHTML = "Refresh browser!"
+          instruction.style.display = "none";
+          announce.append(game_reset_button);
         }
       }
     }
